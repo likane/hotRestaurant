@@ -31,11 +31,34 @@ app.get("/reserve", function(req, res){
 	res.sendFile(path.join(__dirname, "reserve.html"))
 });
 
+// Search for Specific Character (or all characters) - provides JSON
+app.get("/api/:characters?", function(req, res) {
+  var chosen = req.params.characters;
+
+  if (chosen) {
+    console.log(chosen);
+
+    for (var i = 0; i < characters.length; i++) {
+      if (chosen === characters[i].routeName) {
+        res.json(characters[i]);
+        return;
+      }
+    }
+
+    res.json(false);
+  }
+  else {
+    res.json(characters);
+  }
+});
+
 //CREATE NEW RESERVATIONS
 app.post("/api/reserve", function(req, res){
 
+	//console.log("hi");
+
 	var newResrvation = req.body;
-	newResrvation.routeName = newResrvation.name.replace(/\s+/g, "").toLowerCase();
+	//newResrvation.routeName = newResrvation.name.replace(/\s+/g, "").toLowerCase();
 
 	console.log(newResrvation);
 	reservations.push(newResrvation);
